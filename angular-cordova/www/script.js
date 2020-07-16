@@ -351,6 +351,8 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 
 
 
+console.log('script2')
+
 console.log('script1')
 
 function f(fdsfdsfdsfdf = 5) {
@@ -358,8 +360,6 @@ function f(fdsfdsfdsfdf = 5) {
     console.log(a['foo'])
     return fdsfdsfdsfdf;
 }
-
-console.log('script2')
 
 console.log('ok')
 

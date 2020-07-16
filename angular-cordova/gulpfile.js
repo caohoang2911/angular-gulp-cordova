@@ -71,7 +71,7 @@ function injectFileBuild() {
     return gulp.src(['src/app/index.pug'])
         .pipe(pug({pretty: true}))
         .pipe(inject(cssFile))
-        // .pipe(inject(fileJS))
+        .pipe(inject(fileJS))
         .pipe(gulp.dest(['www']))
 }
 
@@ -81,7 +81,10 @@ function injectFileServe() {
         'www/pages/**/*.css',
     ])
     const fileJS = gulp.src([
-        'src/app/pages/**/*.js',
+        'src/app/lib/*.js',
+        'src/app/**/*.module.js',
+        'src/app/**/*.component.js',
+        'src/app/pages/**/*.js'
     ])
     return gulp.src(['src/app/index.pug'])
         .pipe(pug({pretty: true}))
@@ -96,21 +99,20 @@ function reloadServe() {
     return browserSync.reload();
 }
 
-// function watch() {
-//     return gulp.src([
-//         'src/app/*.js',
-//         'src/app/*.scss',
-//         'src/app/*.pug'
-//     ], gulp.series(
-//         delWWW,
-//         bundlePug,
-//         bundleJS,
-//         bundleCss,
-//         'minify',
-//         injectFileServe,
-//         reloadServe
-//     ))
-// }
+function watch() {
+    return gulp.watch([
+        'src/**/*.js',
+        'src/**/*.scss',
+        'src/**/*.pug',
+        'src/*.pug'
+    ], gulp.series(
+        bundlePug,
+        bundleCss,
+        'minify',
+        injectFileServe,
+        reloadServe,
+    ))
+}
 
 // task child
 gulp.task('minify', gulp.series(
@@ -124,7 +126,7 @@ gulp.task('default', gulp.series(
     'minify',
     injectFileServe,
     serve,
-    // watch
+    watch
 ))
 gulp.task('build-web', gulp.series(
     delWWW,
