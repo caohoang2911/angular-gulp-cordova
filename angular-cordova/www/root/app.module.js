@@ -1,18 +1,18 @@
-const components = [
+const modules = [
     'popup',
-    'newsComponent'
-]
+    'newsModule'
+]//Module
 const lib = [
     'ngRoute'
 ]
 
 
-var app = angular.module('app', [...lib,...components])
+var app = angular.module('app', [...lib, ...modules])
 
 app.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
         .when('/news', {
-            template: '<h3>sss</h3>'
+            template: '<news-component></news-component>'
         })
-        // .otherwise('/news')
+        .otherwise('/news')
 }])

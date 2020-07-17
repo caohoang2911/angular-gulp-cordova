@@ -1,5 +1,5 @@
 console.log(app, 'app ')
-app.directive('ngContentModal', [function () {
+app.directive('ngContentModal', function () {
     return {
         restrict: 'AE',
         replace: true,
@@ -16,7 +16,7 @@ app.directive('ngContentModal', [function () {
            `,
         link: ProcessModal
     }
-}])
+})
 
 function ProcessModal(scope, element, attribute) {
 

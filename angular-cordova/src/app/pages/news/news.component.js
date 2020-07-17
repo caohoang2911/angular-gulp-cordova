@@ -1,9 +1,24 @@
-
 newsModule.component('newsComponent', {
-    templateURL: '<h3>OK</h3>',
+    templateUrl: '/pages/news/news.template.html',
     controller: newsController,
     controllerAs: 'newsCtrl'
 })
+newsController.$inject = [
+    '$scope',
+    '$rootScope',
+    'popupService'
+]
 
-function newsController() {
+function newsController(
+    $scope,
+    $rootScope,
+    popupService
+) {
+    $scope.openModal = function () {
+        popupService.onOpen()
+    }
+    $scope.onHandleCancel = function () {
+        popupService.onCancel()
+
+    }
 }
