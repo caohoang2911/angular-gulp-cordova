@@ -1,0 +1,4 @@
+button.btn(ng-click="openModal()") Open popups
+button.btn(ng-click="onHandleCancel()") Cancel popups
+ng-content-modal(is-open='$root.homeState.cancel' on-close="onHandleCancel()")
+    popup(on-cancel="onHandleCancel()")

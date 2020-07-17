@@ -26,15 +26,36 @@ function serve(done) {
 }
 
 function bundleCss() {
-    const template = gulp.src(['src/app/pages/**/*.scss'])
+    const template = gulp.src([
+        'src/app/pages/**/*.scss',
+    ])
         .pipe(gulpSass())
         .pipe(gulp.dest(['www/pages']))
-
-    return merge(template);
+    const component = gulp.src([
+        'src/app/components/**/*.scss'
+    ])
+        .pipe(gulpSass())
+        .pipe(gulp.dest(['www/components']))
+    const scss = gulp.src([
+        'src/app/scss/*.scss'
+    ])
+        .pipe(gulpSass())
+        .pipe(gulp.dest(['www/scss']))
+    return merge(template, component, scss);
 }
 
 function bundlePug() {
-    const template = gulp.src(['src/app/templates/*.pug'])
+    const root = gulp.src([
+        'src/app/root/*.pug'
+    ])
+        .pipe(pug({
+            pretty: true
+        }))
+        .pipe(gulp.dest('www/root'))
+    const template = gulp.src([
+        'src/app/templates/*.pug',
+
+    ])
         .pipe(pug({
             pretty: true
         }))
@@ -44,8 +65,14 @@ function bundlePug() {
             pretty: true
         }))
         .pipe(gulp.dest(['www/pages']))
-
-    return merge(template, pages);
+    const component = gulp.src([
+        'src/app/components/**/*.pug',
+    ])
+        .pipe(pug({
+            pretty: true
+        }))
+        .pipe(gulp.dest(['www/components']))
+    return merge(root, template, pages, component);
 }
 
 function minifyJSBuild() {
@@ -75,16 +102,53 @@ function injectFileBuild() {
         .pipe(gulp.dest(['www']))
 }
 
+function moveJS() {
+    const rootJS = gulp.src([
+        'src/app/root/*.js'
+    ])
+        .pipe(gulp.dest('www/root'))
+    const pagesJS = gulp.src([
+        'src/app/pages/**/*.js',
+    ])
+        .pipe(gulp.dest('www/pages'))
+    const componentJS = gulp.src([
+        'src/app/components/**/*.js'
+    ])
+        .pipe(gulp.dest('www/components'))
+    const libJS = gulp.src([
+        'src/app/lib/angular.min.js',
+        'src/app/lib/angular-route.min.js',
+        'src/app/lib/**/*.js'
+    ])
+        .pipe(gulp.dest('www/lib'))
+    const services = gulp.src([
+        'src/app/services/*.js'
+    ])
+        .pipe(gulp.dest('www/services'))
+    const directives = gulp.src(
+        ['src/app/directives/*.js']
+    )
+        .pipe(gulp.dest('www/directives'))
+    return merge(rootJS, pagesJS, componentJS, libJS, services, directives)
+}
+
 function injectFileServe() {
     console.log('0lks')
     const cssFile = gulp.src([
+        'www/scss/*.css',
         'www/pages/**/*.css',
+        'www/components/**/*.css',
     ])
     const fileJS = gulp.src([
-        'src/app/lib/*.js',
-        'src/app/**/*.module.js',
-        'src/app/**/*.component.js',
-        'src/app/pages/**/*.js'
+        'www/lib/angular.min.js',
+        'www/lib/angular-route.min.js',
+        'www/**/*.module.js',
+        'www/services/*.js',
+        'www/directives/*.js',
+        'www/**/*.component.js',
+        'www/components/**/*.js',
+        'www/pages/**/*.js',
+
     ])
     return gulp.src(['src/app/index.pug'])
         .pipe(pug({pretty: true}))
@@ -95,8 +159,9 @@ function injectFileServe() {
         .pipe(gulp.dest(['www']))
 }
 
-function reloadServe() {
-    return browserSync.reload();
+function reloadServe(done) {
+    browserSync.reload();
+    done();
 }
 
 function watch() {
@@ -104,11 +169,14 @@ function watch() {
         'src/**/*.js',
         'src/**/*.scss',
         'src/**/*.pug',
-        'src/*.pug'
+        'src/*.pug',
+        'src/**/**/*.js',
+        'src/**/**/*.scss',
+        'src/**/**/*.pug',
     ], gulp.series(
         bundlePug,
         bundleCss,
-        'minify',
+        moveJS,
         injectFileServe,
         reloadServe,
     ))
@@ -123,7 +191,7 @@ gulp.task('minify', gulp.series(
 gulp.task('default', gulp.series(
     bundlePug,
     bundleCss,
-    'minify',
+    moveJS,
     injectFileServe,
     serve,
     watch
@@ -133,6 +201,7 @@ gulp.task('build-web', gulp.series(
     bundlePug,
     minifyJSBuild,
     bundleCss,
+    moveJS,
     'minify',
     injectFileBuild
 ));

@@ -1,0 +1,6 @@
+
+<button class="btn" ng-click="openModal()">Open popups</button>
+<button class="btn" ng-click="onHandleCancel()">Cancel popups</button>
+<ng-content-modal is-open="$root.homeState.cancel" on-close="onHandleCancel()">
+  <popup on-cancel="onHandleCancel()"></popup>
+</ng-content-modal>

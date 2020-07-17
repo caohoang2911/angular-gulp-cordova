@@ -1,0 +1,16 @@
+.popup {
+  &-content {
+    background: red;
+    position: fixed;
+    left: 0;
+    bottom: -100%;
+    height: 100%;
+    width: 100%;
+    transition: .25s all ease;
+  }
+  &-content {
+    &.show {
+      bottom: -50px;
+    }
+  }
+}
