@@ -1,3 +1,9 @@
+ng-content-modal(
+    is-open="$root.popup.select"
+    on-close="$root.popupSelectConfig.closePopup()"
+    data-select='$root.popupSelectConfig.listItems'
+    )
+    list-select(
+        data-select='$root.popupSelectConfig.listItems'
+        )
 .template(ng-view)
-
-

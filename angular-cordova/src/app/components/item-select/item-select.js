@@ -1,6 +1,10 @@
 app.component('itemSelect', {
-    template: `<li class="item item--select">{{value}}</li>`,
+    template: `<li 
+                onSelect='itemSelectCtrl.onSelect({id:itemSelectCtrl.value.id})'
+                class="item item--select">{{itemSelectCtrl.value.name}}</li>`,
     bindings: {
-        value: '<'
-    }
+        value: '<',
+        onSelect:'&'
+    },
+    controllerAs:'itemSelectCtrl',
 })

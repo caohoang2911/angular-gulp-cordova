@@ -6,12 +6,15 @@ app.directive('ngContentModal', function () {
         transclude: true,
         scope: {
             isOpen: '<',
-            onClose: '&'
+            onClose: '&',
+            dataSelect:'<'
         },
         template: `
                 <div class="popup-content modal-content">
                     <span class="popup-close" ng-click="onClose()">X</span>
                     <ng-transclude></ng-transclude>
+                    <button>onOK</button>
+                    <button>onCancel</button>
                 </div>
            `,
         link: ProcessModal
@@ -19,8 +22,9 @@ app.directive('ngContentModal', function () {
 })
 
 function ProcessModal(scope, element, attribute) {
-
+    const vm=this;
     scope.$watch('isOpen', function (newValue, oldValue) {
+        console.log(vm.dataSelect,'dataSelect')
         const ele = element[0];
         if (scope.isOpen != undefined && scope.isOpen)
             angular.element(ele).addClass('show')

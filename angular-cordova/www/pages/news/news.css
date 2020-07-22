@@ -1,0 +1,7 @@
+ul {
+  padding: 0; }
+  ul.chip-filter {
+    overflow: auto;
+    display: flex; }
+    ul.chip-filter li {
+      margin: 5px; }

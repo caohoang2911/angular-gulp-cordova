@@ -26,6 +26,11 @@ function serve(done) {
 }
 
 function bundleCss() {
+    const layout=gulp.src([
+        'src/app/layout/**/.scss'
+    ])  
+        .pipe(gulpSass())
+        .pipe(gulp.dest(['www/layout']))
     const template = gulp.src([
         'src/app/pages/**/*.scss',
     ])
@@ -41,10 +46,18 @@ function bundleCss() {
     ])
         .pipe(gulpSass())
         .pipe(gulp.dest(['www/scss']))
-    return merge(template, component, scss);
+    return merge(template, component, scss,layout);
 }
 
 function bundlePug() {
+    const layout=gulp.src([
+        'src/app/layout/*.pug',
+        'src/app/layout/**/*.pug'
+    ])
+        .pipe(pug({
+            pretty: true
+        }))
+        .pipe(gulp.dest('www/layout'))
     const root = gulp.src([
         'src/app/root/*.pug'
     ])
@@ -72,7 +85,7 @@ function bundlePug() {
             pretty: true
         }))
         .pipe(gulp.dest(['www/components']))
-    return merge(root, template, pages, component);
+    return merge(root, template, pages, component,layout);
 }
 
 function minifyJSBuild() {
@@ -103,12 +116,18 @@ function injectFileBuild() {
 }
 
 function moveJS() {
+    const layoutJS =gulp.src([
+        'src/app/layout/**/*.js',
+        'src/app/layout/*.js'
+    ])
+        .pipe(gulp.dest('www/layout'))
     const rootJS = gulp.src([
         'src/app/root/*.js'
     ])
         .pipe(gulp.dest('www/root'))
     const pagesJS = gulp.src([
         'src/app/pages/**/*.js',
+        'src/app/pages/**/**/*.js'
     ])
         .pipe(gulp.dest('www/pages'))
     const componentJS = gulp.src([
@@ -129,17 +148,18 @@ function moveJS() {
         ['src/app/directives/*.js']
     )
         .pipe(gulp.dest('www/directives'))
-    return merge(rootJS, pagesJS, componentJS, libJS, services, directives)
+    return merge(rootJS, pagesJS, componentJS, libJS, services, directives,layoutJS)
 }
 
 function injectFileServe() {
-    console.log('0lks')
     const cssFile = gulp.src([
         'www/scss/*.css',
+        'www/layout/*.css',
         'www/pages/**/*.css',
         'www/components/**/*.css',
     ])
     const fileJS = gulp.src([
+        
         'www/lib/angular.min.js',
         'www/lib/angular-route.min.js',
         'www/**/*.module.js',
@@ -148,7 +168,9 @@ function injectFileServe() {
         'www/**/*.component.js',
         'www/components/**/*.js',
         'www/pages/**/*.js',
-
+        'www/layout/**/*.js',
+        'www/layout/*.js'
+        
     ])
     return gulp.src(['src/app/index.pug'])
         .pipe(pug({pretty: true}))
@@ -173,6 +195,7 @@ function watch() {
         'src/**/**/*.js',
         'src/**/**/*.scss',
         'src/**/**/*.pug',
+
     ], gulp.series(
         bundlePug,
         bundleCss,

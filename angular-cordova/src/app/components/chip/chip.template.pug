@@ -1,0 +1,9 @@
+.chip(
+    ng-class='chipCtrl.className' 
+    ng-style='chipCtrl.style' 
+    ng-click="chipCtrl.onClick({'id': chipCtrl.value.id})"
+    )
+    span {{chipCtrl.value.name}}
+    span.chip-close(ng-click="chipCtrl.onRemove({'id': chipCtrl.value.id})" ng-if="chipCtrl.isClose") x
+    
+     

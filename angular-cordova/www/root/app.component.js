@@ -9,6 +9,4 @@ appController.$inject = [
 
 function appController(
 
-) {
-
-}
+) {}
